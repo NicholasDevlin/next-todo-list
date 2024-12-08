@@ -32,7 +32,7 @@ export async function createUser(name: string, email: string, password: string) 
     },
   });
 
-  return user;
+  return {...user, password: ""};
 }
 
 export async function authenticateUser(email: string, password: string) {
@@ -52,7 +52,7 @@ export async function authenticateUser(email: string, password: string) {
     throw new Error('Invalid credentials');
   }
 
-  return user;
+  return {...user, password: ""};
 }
 
 async function main() {
