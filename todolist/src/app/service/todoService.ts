@@ -3,14 +3,17 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function getTodo(): Promise<TodosDto[]> {
+export async function getTodo(authorId: number): Promise<TodosDto[]> {
   const todos = await prisma.todos.findMany({
+    where: {
+      authorId: authorId,
+    },
     select: {
       id: true,
       title: true,
       content: true,
       authorId: true,
-      status: true
+      status: true,
     },
   });
 
@@ -19,7 +22,7 @@ export async function getTodo(): Promise<TodosDto[]> {
     title: todo.title,
     content: todo.content,
     authorId: todo.authorId,
-    status: todo.status as TodoStatus, 
+    status: todo.status as TodoStatus,
   }));
 }
 
@@ -54,7 +57,7 @@ export async function updateTodo(id: number, data: TodosDto) {
 
 async function main() {
   try {
-    await getTodo();
+    // await getTodo();
   } catch (error) {
     console.error('Error in main function:', error);
   } finally {

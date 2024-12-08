@@ -28,8 +28,11 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const users = await getTodo();
-    return NextResponse.json(users);
+    const user = localStorage.getItem("user");
+    if (!user) return NextResponse.json([]);
+    const parsedUser = JSON.parse(user);
+    const users = await getTodo(parsedUser.id);
+    return NextResponse.json(users); 
   } catch (error) {
     console.error('Error fetching todos:', error);
 
