@@ -29,8 +29,10 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    const userId = url.searchParams.get('userId');
     
+    const userId = url.searchParams.get('userId');
+    const page = parseInt(url.searchParams.get('page') || '1', 10); 
+
     if (!userId) {
       return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
     }
@@ -40,15 +42,14 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: 'Invalid User ID' }, { status: 400 });
     }
     
-    const users = await getTodo(parsedUserId);
-    return NextResponse.json(users);
+    const todos = await getTodo(parsedUserId, page);
+    return NextResponse.json(todos);
+    
   } catch (error: any) {
     console.error('Error fetching todos:', error);
-
     return NextResponse.json(
       { message: 'Failed to fetch data', error: error.message },
       { status: 500 }
     );
   }
 }
-

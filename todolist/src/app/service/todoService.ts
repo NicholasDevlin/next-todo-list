@@ -3,11 +3,14 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function getTodo(authorId: number): Promise<TodosDto[]> {
+export async function getTodo(userId: number, page: number) {
+  const skip = (page - 1) * 12;  
+  const take = 12;  
+  
   const todos = await prisma.todos.findMany({
     where: {
-      authorId: authorId,
-      deletedAt: null,
+      authorId: userId,
+      deletedAt: null, 
     },
     select: {
       id: true,
@@ -15,18 +18,23 @@ export async function getTodo(authorId: number): Promise<TodosDto[]> {
       content: true,
       authorId: true,
       status: true,
-      deletedAt: true
+      deletedAt: true,
     },
+    skip: skip,  
+    take: take,  
   });
 
-  return todos.map((todo) => ({
-    id: todo.id,
-    title: todo.title,
-    content: todo.content,
-    authorId: todo.authorId,
-    status: todo.status as TodoStatus,
-    deletedAt: todo.deletedAt
-  }));
+  const totalCount = await prisma.todos.count({
+    where: {
+      authorId: userId,
+      deletedAt: null,
+    }
+  });
+
+  return {
+    todos,
+    totalCount,  
+  };
 }
 
 export async function createTodo(data: TodosDto) {
@@ -58,15 +66,3 @@ export async function updateTodo(id: number, data: TodosDto) {
 
   return updatedTodo;
 }
-
-async function main() {
-  try {
-    // await getTodo();
-  } catch (error) {
-    console.error('Error in main function:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-main();

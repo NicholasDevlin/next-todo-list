@@ -46,7 +46,6 @@ const ToDoEditor = ({ onClose, open, data }: any) => {
 
   useEffect(() => {
     form.setFieldsValue({title: data.title, content: data.content, status: data.status, id: data.id})
-   console.log(data); 
   }, [data])
 
   return (
