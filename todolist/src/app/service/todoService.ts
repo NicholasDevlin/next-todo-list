@@ -7,6 +7,7 @@ export async function getTodo(authorId: number): Promise<TodosDto[]> {
   const todos = await prisma.todos.findMany({
     where: {
       authorId: authorId,
+      deletedAt: null,
     },
     select: {
       id: true,
@@ -14,6 +15,7 @@ export async function getTodo(authorId: number): Promise<TodosDto[]> {
       content: true,
       authorId: true,
       status: true,
+      deletedAt: true
     },
   });
 
@@ -23,6 +25,7 @@ export async function getTodo(authorId: number): Promise<TodosDto[]> {
     content: todo.content,
     authorId: todo.authorId,
     status: todo.status as TodoStatus,
+    deletedAt: todo.deletedAt
   }));
 }
 
@@ -49,6 +52,7 @@ export async function updateTodo(id: number, data: TodosDto) {
       content: data.content,
       authorId: data.authorId,
       status: data.status,
+      deletedAt: data.deletedAt
     },
   });
 

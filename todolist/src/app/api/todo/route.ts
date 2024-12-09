@@ -26,19 +26,29 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const user = localStorage.getItem("user");
-    if (!user) return NextResponse.json([]);
-    const parsedUser = JSON.parse(user);
-    const users = await getTodo(parsedUser.id);
-    return NextResponse.json(users); 
-  } catch (error) {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('userId');
+    
+    if (!userId) {
+      return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
+    }
+    
+    const parsedUserId = parseInt(userId, 10);
+    if (isNaN(parsedUserId)) {
+      return NextResponse.json({ message: 'Invalid User ID' }, { status: 400 });
+    }
+    
+    const users = await getTodo(parsedUserId);
+    return NextResponse.json(users);
+  } catch (error: any) {
     console.error('Error fetching todos:', error);
 
     return NextResponse.json(
-      { message: 'Failed to fetch data', error: error },
+      { message: 'Failed to fetch data', error: error.message },
       { status: 500 }
     );
   }
 }
+

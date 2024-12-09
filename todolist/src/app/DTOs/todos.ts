@@ -3,7 +3,8 @@ export interface TodosDto {
   title: string | null;  
   content: string | null;
   authorId: number;
-  status: TodoStatus
+  status: TodoStatus;
+  deletedAt: Date | null;
 }
 
 export enum TodoStatus {

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Input, Button, Row, Col, Form } from 'antd';
 import type { FormProps } from 'antd';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'
 
 const SignIn = () => {
   const router = useRouter();
@@ -28,10 +29,9 @@ const SignIn = () => {
       }
 
       const res = await response.json();
-      debugger
       if (!res.ok) throw new Error(res.error);
       localStorage.setItem('authToken', res.data.token);
-      localStorage.setItem('user',  JSON.stringify(res.data));
+      localStorage.setItem('user', JSON.stringify(res.data));
       router.push('/');
     } catch (err: any) {
       setError(`An error occurred while signing in. Please try again.\n${err}`);
@@ -43,15 +43,15 @@ const SignIn = () => {
   };
 
   return (
-    <div className="grid place-items-center w-screen h-screen">
-      <div className="w-7/12 bg-gray-100 rounded-md">
+    <div className="grid place-items-center content-center w-screen h-screen">
+      <div className="w-full sm:w-8/12 md:w-7/12 bg-gray-100 rounded-md">
         <Form
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off">
           <Row className="p-3">
-            <Col span={8} className="text-xl text-black font-medium">Email</Col>
-            <Col span={16}>
+            <Col xs={24} md={8} className="text-xl text-black font-medium">Email</Col>
+            <Col xs={24} md={16}>
               <Form.Item<FieldType>
                 name="email"
                 rules={[{ required: true, message: 'Please input your email!' }]}
@@ -61,8 +61,8 @@ const SignIn = () => {
             </Col>
           </Row>
           <Row className="p-3">
-            <Col span={8} className="text-xl text-black font-medium">Password</Col>
-            <Col span={16}>
+            <Col xs={24} md={8} className="text-xl text-black font-medium">Password</Col>
+            <Col xs={24} md={16}>
               <Form.Item<FieldType>
                 name="password"
                 rules={[{ required: true, message: 'Please input your password!' }]}
@@ -84,6 +84,12 @@ const SignIn = () => {
             </Row>
           )}
         </Form>
+      </div>
+      <div className='pt-3 font-medium text-xl'>
+        Create an account?
+        <Link className='ps-2' href='/pages/sign-up'>
+          Sign Up
+        </Link>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ model Todos {
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Todos_ibfk_1")
   status TodoStatus @default(PENDING)
+  deletedAt DateTime?
 
   @@index([authorId], map: "authorId")
 }

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+"use client";
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   token: string | null;
@@ -7,17 +9,23 @@ interface AuthContextType {
   logout: () => void;
 }
 
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC = ({ children }: any) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
+  const router = useRouter();
 
-  // Check if the user is already logged in on mount (from localStorage)
+  
   useEffect(() => {
     const savedToken = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('user');
-    
+
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
@@ -36,6 +44,7 @@ export const AuthProvider: React.FC = ({ children }: any) => {
     setUser(null);
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
+    router.push('/pages/sign-in');
   };
 
   return (
@@ -44,6 +53,7 @@ export const AuthProvider: React.FC = ({ children }: any) => {
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

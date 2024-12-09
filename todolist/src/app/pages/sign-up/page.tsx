@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Input, Button, Row, Col, Form } from 'antd';
 import type { FormProps } from 'antd';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'
 
 const SignUp = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="grid place-items-center w-screen h-screen">
+    <div className="grid place-items-center content-center w-screen h-screen">
       <div className="w-7/12 bg-gray-100 rounded-md">
         <Form
           onFinish={onFinish}
@@ -95,6 +96,12 @@ const SignUp = () => {
             </Row>
           )}
         </Form>
+      </div>
+      <div className='pt-3 font-medium text-xl'>
+        Already have an account?
+        <Link className='ps-2' href='/pages/sign-in'>
+          Sign In
+        </Link>
       </div>
     </div>
   );
